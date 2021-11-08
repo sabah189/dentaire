@@ -1,11 +1,55 @@
 
+<?php 
+
+include('conn.php');
+
+//  $req2 = "select,pat.pat_id as id ,type_rdv as type from (t_patient pat) inner join (a_rdv rdv inner join t_patient pat on pat.pat_id = con.pat_id) on (sym.sym_id = con.sym_id ) having id= $code;";
+
+$req2="SELECT nom, prenom , date  ,heure,type, statut  , id_rdv FROM  rdv , patient pat where pat.pat_id=rdv.pat_id ";
+$rs6 = mysqli_query($conn,$req2);
+
+
+
+
+$req = "select * from patient";
+$rs = mysqli_query($conn,$req) or die(mysqli_error());
+$option = NULL;
+
+while($row = mysqli_fetch_assoc($rs))
+    {
+      $option .= '<option value = "'.$row['pat_id'].'">'.$row['nom'].' '.$row['prenom'].' '.$row['ddn'].'</option>';
+    }
+
+    if (isset($_POST['ajouter'])) {
+      $patient = $_POST['patient'];
+      $date =  date("Y-m-d");
+      $heure = time("H:m:s");
+      $type = $_POST['type'];
+	
+  
+      
+      $req="INSERT INTO rdv(date,heure,type,pat_id ) values ('$date','$heure','$type','$patient');";  //requete SQL insertion 
+      mysqli_query($conn,$req);
+
+      header('location:rdv.php');
+     
+    }
+
+	
+   
+
+?>
+
+
 <!doctype html>
 <html class="no-js" lang="en">
 
 <head>
     <meta charset="utf-8">
+      	<!-- Site favicon -->
+	<link rel="icon" type="image/png" sizes="16x16" href="assets/images/icon/dent.png">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>srtdash - SEO Dashboard</title>
+    <title>Rendez-vous</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/png" href="assets/images/icon/favicon.ico">
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
@@ -14,92 +58,164 @@
     <link rel="stylesheet" href="assets/css/metisMenu.css">
     <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
     <link rel="stylesheet" href="assets/css/slicknav.min.css">
-    <!-- amchart css -->
+    <!-- amcharts css -->
     <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
-    <!-- others css -->
+    <!-- Start datatable css -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.jqueryui.min.css">
+    <!-- style css -->
     <link rel="stylesheet" href="assets/css/typography.css">
     <link rel="stylesheet" href="assets/css/default-css.css">
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/responsive.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- modernizr css -->
     <script src="assets/js/vendor/modernizr-2.8.3.min.js"></script>
 </head>
 
 <body>
+  
+  
 <?php 
       include('sidebar.php'); 
       
       ?>
- 
- 
-    <!-- page container area start -->
- 
-        <!-- sidebar menu area start -->
-    
         <!-- sidebar menu area end -->
         <!-- main content area start -->
         <div class="main-content">
             <!-- header area start -->
-       
             <?php 
       include('header.php'); 
       
       ?>
-          
+
+         
             <!-- page title area end -->
             <div class="main-content-inner">
+                
+                <div class="row">
+                    
+                <div class="col" align="right" style="margin-top:20px">
+                            
+                            <a data-toggle="modal" data-target="#myModal"  >    
+                            <button  class="btn btn-sm btn-primary pull-right" > <i class="fa fa-user-plus"></i> &nbsp; Nouveau Rendez-vous</button>
+  </a>
+                                             
 
-
-
-
-
-
-            <div id="calendar"></div>
-
-<div id="createEventModal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-        <h3 id="myModalLabel1">Create Appointment</h3>
-    </div>
-    <div class="modal-body">
-    <form id="createAppointmentForm" class="form-horizontal">
-        <div class="control-group">
-            <label class="control-label" for="inputPatient">Patient:</label>
-            <div class="controls">
-                <input type="text" name="patientName" id="patientName" tyle="margin: 0 auto;" data-provide="typeahead" data-items="4" data-source="[&quot;Value 1&quot;,&quot;Value 2&quot;,&quot;Value 3&quot;]">
-                  <input type="hidden" id="apptStartTime"/>
-                  <input type="hidden" id="apptEndTime"/>
-                  <input type="hidden" id="apptAllDay" />
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="when">When:</label>
-            <div class="controls controls-row" id="when" style="margin-top:5px;">
-            </div>
-        </div>
-    </form>
-    </div>
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-        <button type="submit" class="btn btn-primary" id="submitButton">Save</button>
-    </div>
 </div>
-  
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+  <form action="" method="post">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ajouter un rendez-vous :</h5>
+      </div>
+      
+      <div class="modal-body">
+      <form method="post" action="">
+
+      <input type="hidden" name="id">
+    <p>Patient:</p>
+    <select name="patient" class="form-control"> 
+        <option value = "<?php while($row = mysqli_fetch_assoc($rs))
+    {
+      $option .= '<option value = "'.$row['pat_id'].'">'.$row['pat_nom'].'+'.$row['pat_prenom'].'+'.$row['pat_ddn'].'</option>';
+    }  ?>"><?php echo $option; ?></option>
+    </select>
+    <br>
+    <p>date de rendez vous :</p>
+    <input type="date" name="date"  class="form-control">
+    <br>
+    <p>heure du rendez vous:</p>
+    <input type="time" id="txt" name="time"  class="form-control">
+        <br>
+    <p>type : </p>
+    <select class="form-control" name="type">
+                                                <option>--</option>
+                                                <option value="consultation">Consultation</option>
+                                                <option value="controle">Controle</option>
+                                            
+                                            </select>
 
 
 
+	
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <input  type="submit" class="btn btn-info " name="ajouter"  value="ajouter">
+      </div>
+    </form>
+  </div>
+</div>
+</form>
 
+</div>
+         
 
-            
-                </div>
+<!------------ Fin Modal ---------->
+
+<!-- data table start -->
+                    <div class="col-12 mt-5">
+                        
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title">la liste des rendez-vous</h4>
+                                <div class="data-tables">
+                                <table id="example" class="table table-striped table-bordered nowrap" style="width:100%">
+        <thead>
+            <tr>
+                <th>Patient</th>
+                <th>Date de RDV</th>
+                <th>Heure de RDV</th>
+                <th>Type</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+
+        <?php  while ($et = mysqli_fetch_assoc($rs6))  {  ?>
+    
+            <tr>
+                <td>															<b>		 <?php echo ($et['nom']); ?>            <?php echo ($et['prenom']); ?></a></b>	
+</td>
+                <td>			<?php echo ($et['date']); ?></td>
+                <td><?php echo ($et['heure']); ?></td>
+                <td><?php echo ($et['type']); ?></td>
+                <td></td>
+                <td> </td>
+                <td>  </td>
+                <td></td>
+                <td> <a href="#"data-toggle="modal" data-target="#myModal2" > <i class="fa fa-eye"></i></a></td>
+            </tr>
+   
+         
+            <?php } ?>
+                </tbody>
+    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-          
-          
+                    <!-- data table end -->
+                 
 
 
 
 
+                    
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- offset area end -->
     <!-- jquery latest version -->
     <script src="assets/js/vendor/jquery-2.2.4.min.js"></script>
@@ -111,76 +227,45 @@
     <script src="assets/js/jquery.slimscroll.min.js"></script>
     <script src="assets/js/jquery.slicknav.min.js"></script>
 
-    <!-- start chart js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
-    <!-- start highcharts js -->
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/modules/export-data.js"></script>
-    <!-- start amcharts -->
-    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
-    <script src="https://www.amcharts.com/lib/3/ammap.js"></script>
-    <script src="https://www.amcharts.com/lib/3/maps/js/worldLow.js"></script>
-    <script src="https://www.amcharts.com/lib/3/serial.js"></script>
-    <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
-    <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
-    <!-- all line chart activation -->
-    <script src="assets/js/line-chart.js"></script>
-    <!-- all pie chart -->
-    <script src="assets/js/pie-chart.js"></script>
-    <!-- all bar chart -->
-    <script src="assets/js/bar-chart.js"></script>
-    <!-- all map chart -->
-    <script src="assets/js/maps.js"></script>
+    <!-- Start datatable js -->
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.3/js/responsive.bootstrap.min.js"></script>
+
+
+
+<script src="   https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css "></script> 
+<script src="  https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap.min.css"></script> 
+<script src="  https://cdn.datatables.net/fixedheader/3.2.0/css/fixedHeader.bootstrap.min.css"></script> 
+<script src="  https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css"></script> 
+
+    <script>$(document).ready(function() {
+    var table = $('#example').DataTable( {
+        "responsive": true,
+        "columnDefs": [
+            {
+                "targets": [ 4,5,6,7,8 ],
+                "visible": false,
+                "searchable": false
+            }
+         
+        ]
+
+
+
+
+    } );
+    new $.fn.dataTable.FixedHeader( table );
+} );
+
+
+
+</script>
     <!-- others plugins -->
     <script src="assets/js/plugins.js"></script>
     <script src="assets/js/scripts.js"></script>
-
-    <script>
-
-$(document).ready(function() {
-      var calendar = $('#calendar').fullCalendar({
-      defaultView: 'agendaWeek',
-      editable: true,
-        selectable: true,
-      //header and other values
-      select: function(start, end, allDay) {
-          endtime = $.fullCalendar.formatDate(end,'h:mm tt');
-          starttime = $.fullCalendar.formatDate(start,'ddd, MMM d, h:mm tt');
-          var mywhen = starttime + ' - ' + endtime;
-          $('#createEventModal #apptStartTime').val(start);
-          $('#createEventModal #apptEndTime').val(end);
-          $('#createEventModal #apptAllDay').val(allDay);
-          $('#createEventModal #when').text(mywhen);
-          $('#createEventModal').modal('show');
-       }
-    });
-
-  $('#submitButton').on('click', function(e){
-    // We don't want this to act as a link so cancel the link action
-    e.preventDefault();
-
-    doSubmit();
-  });
-
-  function doSubmit(){
-    $("#createEventModal").modal('hide');
-    console.log($('#apptStartTime').val());
-    console.log($('#apptEndTime').val());
-    console.log($('#apptAllDay').val());
-    alert("form submitted");
-        
-    $("#calendar").fullCalendar('renderEvent',
-        {
-            title: $('#patientName').val(),
-            start: new Date($('#apptStartTime').val()),
-            end: new Date($('#apptEndTime').val()),
-            allDay: ($('#apptAllDay').val() == "true"),
-        },
-        true);
-   }
-});
-    </script>
 </body>
 
 </html>

@@ -1,10 +1,30 @@
 <!-- header area start -->
-           
+<style>
+
+@media screen and (max-width: 768px){
+
+  .notification-area {
+      padding-top:0px;
+      padding-bottom:-0px;
+  }
+  
+  .nav-btn{
+    margin-bottom:0px;
+  }
+  
+
+}
+
+</style>           
+
+
+
+
 <div class="header-area">
                 <div class="row align-items-left">
                     <!-- nav and search button -->
                
-                    <div class="col-md-6 col-sm-8 clearfix">
+                    <div class="col-md-6 col-sm-8 clearfix ">
                         <div class="nav-btn pull-left">
                             <span></span>
                             <span></span>

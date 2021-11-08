@@ -36,7 +36,7 @@ if ($result)
 	
 	else{
 
-	header('location: dash.php');
+	header('location: index.php');
        }
 }
 }
@@ -50,6 +50,8 @@ if ($result)
 
 <head>
     <meta charset="utf-8">
+       	<!-- Site favicon -->
+	<link rel="icon" type="image/png" sizes="16x16" href="assets/images/icon/dent.png">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Login-Dento</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -75,11 +77,7 @@ if ($result)
     <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-    <!-- preloader area start -->
-    <div id="preloader">
-        <div class="loader"></div>
-    </div>
-    <!-- preloader area end -->
+
     <!-- login area start -->
     <div class="login-area login-bg"style="background-image: url('assets/images/bg/login.jpeg');background-repeat: no-repeat;background-attachment: fixed;background-size: 100% 100%;">
         <div class="container">

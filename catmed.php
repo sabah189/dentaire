@@ -38,6 +38,8 @@ if (isset($_POST['ajouter'])) {
 
 <head>
     <meta charset="utf-8">
+          	<!-- Site favicon -->
+	<link rel="icon" type="image/png" sizes="16x16" href="assets/images/icon/dent.png">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Categorie - Medicament</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">

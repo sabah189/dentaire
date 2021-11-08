@@ -20,6 +20,8 @@ $rs1 = mysqli_query($conn,$req1) ;
 
 <head>
     <meta charset="utf-8">
+      	<!-- Site favicon -->
+	<link rel="icon" type="image/png" sizes="16x16" href="assets/images/icon/dent.png">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Patients</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">

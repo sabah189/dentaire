@@ -1,46 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link href="dist/smartselect.min.css" rel="stylesheet" />
-<script src="dist/jquery.smartselect.min.js"></script>
-</head>
-<body>
-    
+<html>
+  <head>
+    <title>Dynamic Dependent Searchable Select Box with PHP Ajax jQuery</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+  </head>
+  <body>
+    <br />
+    <div class="container">
+      <h3 align="center">Dynamic Dependent Searchable Select Box with PHP Ajax jQuery</h3>
+      <br />
+      <div class="panel panel-default">
+        <div class="panel-heading">Select Data</div>
+        <div class="panel-body">
+          <div class="form-group">
+            <label>Select Category</label>
+            <select name="category_item" id="category_item" class="form-control input-lg" data-live-search="true" title="Select Category">
 
-<select id="demo-3c" multiple>
-    <optgroup label="group 1" data-group-exclusive>
-        <option value="1">1</option>
-        <option value="2">2</option>
-    </optgroup>
-    <optgroup label="group a b" data-group-exclusive="a b">
-        <option value="3">3</option>
-        <option value="4">4</option>
-    </optgroup>
-    <optgroup label="group b c" data-group-exclusive="b c">
-        <option value="5">5</option>
-        <option value="6">6</option>
-    </optgroup>
-    <optgroup label="group c" data-group-exclusive="c">
-        <option value="7">7</option>
-        <option value="8">8</option>
-    </optgroup>
-    <optgroup label="group 5">
-        <option value="9">9</option>
-        <option value="10">10</option>
-    </optgroup>
-</select>
-    ...
-<script>
-      $(document).ready(function(){
-$("select#demo-3c").smartselect({
-    defaultView: 'root+selected'
-});
-      )};
-</script>
-</body>
+            </select>
+          </div>
+         
+          
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
+
+<script>
+$(document).ready(function(){
+
+  $('#category_item').selectpicker();
+
+
+  load_data('category_data');
+
+  function load_data(type, category_id = '')
+  {
+    $.ajax({
+      url:"load_data.php",
+      method:"POST",
+      data:{type:type, category_id:category_id},
+      dataType:"json",
+      success:function(data)
+      {
+        var html = '';
+        for(var count = 0; count < data.length; count++)
+        {
+          html += '<option value="'+data[count].id+'">'+data[count].name+'</option>';
+        }
+        if(type == 'category_data')
+        {
+          $('#category_item').html(html);
+          $('#category_item').selectpicker('refresh');
+        }
+      
+      }
+    })
+  }
+
+  $(document).on('change', '#category_item', function(){
+    var category_id = $('#category_item').val();
+    load_data('sub_category_data', category_id);
+  });
+  
+});
+</script>
